@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sweeping Area</title>
+    <link rel="stylesheet" href="/src/style.css">
+  </head>
+  <body>
+    <div id="construction">
+      <canvas id="scanvas"></canvas>
+    </div>
+    <div id="tools">
+      <canvas id="tcanvas"></canvas>
+    </div>
+    <!-- Unit-change popup dialog -->
+    <div id="popupDiv">
+      <p>&nbsp;</p>
+      Abbreviated Unit Name (for example, <b>m</b> for <b><i>meters</i></b>):<br>
+      <input type="text" maxlength="5" id="unitshort"><br>
+      Subdivision(s): <span id="sliderval"></span><br>
+      <input type="range" id="subdiv" min="1" value="1" max="10" step="1"
+             oninput="document.getElementById('sliderval').textContent=this.value">
+      <br>
+      <input type="checkbox" id="sameUnit">
+      Use Same Units as <span id="oppDirection">Horizontal</span> Units
+      <p>&nbsp;</p>
+      <input type="button" id="submitUnit" value="change units">
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
