@@ -65,6 +65,7 @@ export interface CutState {
   handleY: number;           // sub-tick y of the draggable horizontal cut line
   cutGrabbed: 'hline' | 'vline' | 'scissors' | 'none';
   cameFromCustom: boolean;   // true if rearrange was reached via 'custom' path
+  cameFromGeoboard: boolean; // true if cut mode was entered from geoboard
   showArea: boolean;         // toggle: show area in rearrange caption
   areaString: string;        // formatted area value set on entering cut mode
   // Rotation (Phase 6)
@@ -98,6 +99,13 @@ export interface CavalieriState {
   fallDir: 'left' | 'right' | 'straight' | 'none';
 }
 
+export interface GeoboardState {
+  dragging: boolean;
+  pieceIndex: number;        // index into cut.pieces (always 0 for now)
+  vertexIndex: number;       // index of the vertex being dragged
+  originalPiece: import('./piece.ts').Piece | null;  // saved before drag for undo
+}
+
 export interface AppState {
   grid: GridState;
   mode: number;
@@ -105,6 +113,7 @@ export interface AppState {
   sweep: SweepState;
   cut: CutState;
   cavalieri: CavalieriState;
+  geo: GeoboardState;
 }
 
 export function makeDefaultState(): AppState {
@@ -170,6 +179,7 @@ export function makeDefaultState(): AppState {
       handleY: 0,
       cutGrabbed: 'none',
       cameFromCustom: false,
+      cameFromGeoboard: false,
       showArea: false,
       areaString: '',
       doingRotation: false,
@@ -183,6 +193,12 @@ export function makeDefaultState(): AppState {
       mirrorActive: 'none',
       mirrorX: 0,   // set by enterCutMode → setMirrorHandles
       mirrorY: 0,
+    },
+    geo: {
+      dragging: false,
+      pieceIndex: 0,
+      vertexIndex: 0,
+      originalPiece: null,
     },
   };
 }

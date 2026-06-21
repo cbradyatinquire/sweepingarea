@@ -3,6 +3,8 @@ import { makeDefaultState } from './state.ts';
 import { adjustDimensions, makeVEqualToH } from './coords.ts';
 import { Piece, copyPieces } from './piece.ts';
 import { submitUnitDialog } from './setup.ts';
+import { enterGeoboardMode } from './geoboard.ts';
+import { initMessaging } from './messaging.ts';
 import {
   redraw,
   onCanvasMouseDown, onCanvasMouseMove, onCanvasMouseUp,
@@ -44,6 +46,12 @@ if (new URLSearchParams(window.location.search).get('testShape') === 'arrow') {
   state.mode = 3;
 }
 
+if (new URLSearchParams(window.location.search).get('testShape') === 'geoboard') {
+  // enterGeoboardMode needs grid dimensions — called after first resize in initialise()
+  // so we set a flag here and apply it post-init
+  (state as any)._startGeoboard = true;
+}
+
 // ----------------------------------------------------------------
 // Resize
 // ----------------------------------------------------------------
@@ -63,6 +71,7 @@ function resize(): void {
   adjustDimensions(canv, state.grid);
   if (!initialised) {
     makeVEqualToH(state.grid);
+    if ((state as any)._startGeoboard) enterGeoboardMode(state);
     initialised = true;
   }
 
@@ -88,6 +97,8 @@ tools.addEventListener('mousedown', e => onToolsMouseDown(e, state, canv, tools)
 // ----------------------------------------------------------------
 // Unit dialog submit button
 // ----------------------------------------------------------------
+
+initMessaging(state, canv, tools, redraw);
 
 document.getElementById('submitUnit')!.addEventListener('click', () => {
   submitUnitDialog(state, canv, tools);

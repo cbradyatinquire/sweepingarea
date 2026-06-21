@@ -53,6 +53,7 @@ export function enterCutMode(state: AppState): void {
   state.cut.draggingPiece = null;
   state.cut.cutGrabbed = 'none';
   state.cut.cameFromCustom = false;
+  state.cut.cameFromGeoboard = false;
   state.cut.showArea = false;
   // Store the area string from sweep mode for display in rearrange
   state.cut.areaString = sweep.areaToDisplay || '';
@@ -499,7 +500,7 @@ function onRotationClick(
     // Step 1: select a piece
     const idx = firstPieceIndexAt(pt, state);
     if (idx !== -1) {
-      cut.rotationPieceIndex = idx;
+      cut.rotationPieceIndex = bringToFront(idx, state);
       cut.hoverCenter = snapCenter(pt, g);
     } else {
       // Clicked on empty space — cancel rotation mode
@@ -541,6 +542,7 @@ function startRotationAnimation(
     if (step >= ANIM_STEPS) {
       // Snap to exact result to avoid floating-point drift
       state.cut.pieces[pieceIndex] = state.cut.animTargetPiece!;
+      bringToFront(pieceIndex, state);
       state.cut.animating = false;
       state.cut.animTargetPiece = null;
       state.cut.animCenter = null;
@@ -652,7 +654,8 @@ function cutAlongY(yc: number, state: AppState): void {
 function dragFirstPieceClickedOn(pt: Point, state: AppState): void {
   const idx = firstPieceIndexAt(pt, state);
   if (idx !== -1) {
-    state.cut.draggingPiece = state.cut.pieces[idx];
+    bringToFront(idx, state);
+    state.cut.draggingPiece = state.cut.pieces[state.cut.pieces.length - 1];
     state.cut.pieceDragOrigin = { ...pt };
   }
 }
@@ -661,10 +664,21 @@ function firstPieceIndexAt(pt: Point, state: AppState): number {
   const { grid: g } = state;
   const gridX = getGridCoordForPixelH(pt.x, g);
   const gridY = getGridCoordForPixelV(pt.y, g);
-  for (let i = 0; i < state.cut.pieces.length; i++) {
+  // Iterate top-to-bottom (highest z-order first = end of array first)
+  for (let i = state.cut.pieces.length - 1; i >= 0; i--) {
     if (state.cut.pieces[i].containsGridPoint(gridX, gridY)) return i;
   }
   return -1;
+}
+
+// Move the piece at index to the top of the z-order (end of array).
+// Returns the new index (always pieces.length - 1).
+function bringToFront(index: number, state: AppState): number {
+  const pieces = state.cut.pieces;
+  if (index === pieces.length - 1) return index;
+  const [piece] = pieces.splice(index, 1);
+  pieces.push(piece);
+  return pieces.length - 1;
 }
 
 function draggingCUT(pt: Point, state: AppState): void {

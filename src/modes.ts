@@ -10,6 +10,8 @@ import { drawCUT, startDragCUT, mouseDragCUT, stopDragCUT, enterCutMode, resetCu
          toggleRotation, toggleReflection } from './cut.ts';
 import { drawCAVALIERI, enterCavalieriMode, startDragCAV, mouseDragCAV, stopDragCAV,
          scheduleFall, stopFallTimer, buildCavPiece, getCavAreaString } from './cavalieri.ts';
+import { drawGEO, startDragGEO, mouseDragGEO, stopDragGEO,
+         enterCutFromGeoboard, resetGeoboard } from './geoboard.ts';
 
 // ----------------------------------------------------------------
 // Toolbar images (loaded once at startup)
@@ -28,13 +30,15 @@ const reflectDownBtn = new Image();  reflectDownBtn.src = 'images/reflectDown.pn
 // Toolbar drawing
 // ----------------------------------------------------------------
 
+const resetButton = new Image();  resetButton.src = 'images/resetImage.png';
+
 const CAPTIONS = [
   'Click to start!',
   'Set up Sweeper & Units',
   'Drag to Sweep',
   'Click to Cut; Drag to Arrange',
   'Tilt to Sweep Down',
-  'Construct Shapes to Dissect',
+  'Drag vertices · click edge to add · Done when ready',
   'Click to Rotate; Drag to Arrange',
 ];
 
@@ -133,6 +137,22 @@ export function drawTools(tools: HTMLCanvasElement, state: AppState): void {
   if (state.mode === 4 && state.cavalieri.t1s.length > 1) {
     ctx.drawImage(rightButton, tools.width - imwid, 0, imwid, imht);
   }
+  if (state.mode === 5) {
+    // Done button (right slot)
+    ctx.drawImage(rightButton, tools.width - imwid, 0, imwid, imht);
+    // Reset button (second-from-right slot) — draw as text label over arrow shape
+    const tw = Math.round(imwid * 0.8);
+    const th = Math.round(imht  * 0.8);
+    const tx = tools.width - 2 * imwid + Math.round((imwid - tw) / 2);
+    const ty = Math.round((imht - th) / 2);
+    ctx.fillStyle = '#888';
+    ctx.fillRect(tx, ty, tw, th);
+    ctx.fillStyle = '#fff';
+    ctx.font = `bold ${Math.round(imht * 0.35)}px Calibri, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Reset', tx + tw / 2, ty + th / 2);
+  }
   if (state.mode === 3 && state.cut.subMode === 'choose') {
     ctx.drawImage(forkedButton, tools.width - imwid, 0, imwid, imht);
   }
@@ -174,6 +194,7 @@ export function onCanvasMouseDown(
   if (state.mode === 2) startDragSWEEP(pt, state);
   if (state.mode === 3) startDragCUT(pt, state, canv, tools, redraw);
   if (state.mode === 4) startDragCAV(pt, state);
+  if (state.mode === 5) startDragGEO(pt, state);
   redraw(canv, tools, state);
 }
 
@@ -186,17 +207,19 @@ export function onCanvasMouseMove(
   if (state.mode === 2) mouseDragSWEEP(pt, state);
   if (state.mode === 3) mouseDragCUT(pt, state);
   if (state.mode === 4) mouseDragCAV(pt, state);
+  if (state.mode === 5) mouseDragGEO(pt, state);
   redraw(canv, tools, state);
 }
 
 export function onCanvasMouseUp(
-  _e: MouseEvent, state: AppState,
+  e: MouseEvent, state: AppState,
   canv: HTMLCanvasElement, tools: HTMLCanvasElement
 ): void {
   if (state.mode === 1) stopDragSETUP(state);
   if (state.mode === 2) stopDragSWEEP(state);
   if (state.mode === 3) stopDragCUT(state);
   if (state.mode === 4) stopDragCAV(state);
+  if (state.mode === 5) stopDragGEO(getPoint(e), state);
   redraw(canv, tools, state);
 }
 
@@ -210,6 +233,7 @@ export function onCanvasTouchStart(
   if (state.mode === 2) startDragSWEEP(pt, state);
   if (state.mode === 3) startDragCUT(pt, state, canv, tools, redraw);
   if (state.mode === 4) startDragCAV(pt, state);
+  if (state.mode === 5) startDragGEO(pt, state);
   redraw(canv, tools, state);
 }
 
@@ -223,6 +247,7 @@ export function onCanvasTouchMove(
   if (state.mode === 2) mouseDragSWEEP(pt, state);
   if (state.mode === 3) mouseDragCUT(pt, state);
   if (state.mode === 4) mouseDragCAV(pt, state);
+  if (state.mode === 5) mouseDragGEO(pt, state);
   redraw(canv, tools, state);
 }
 
@@ -231,10 +256,12 @@ export function onCanvasTouchEnd(
   canv: HTMLCanvasElement, tools: HTMLCanvasElement
 ): void {
   e.preventDefault();
+  const pt = getTouchPoint(e, canv);
   if (state.mode === 1) stopDragSETUP(state);
   if (state.mode === 2) stopDragSWEEP(state);
   if (state.mode === 3) stopDragCUT(state);
   if (state.mode === 4) stopDragCAV(state);
+  if (state.mode === 5) stopDragGEO(pt, state);
   redraw(canv, tools, state);
 }
 
@@ -260,7 +287,9 @@ function testSwitchMode(
 
   if (pt.x > rbound) {
     // Right arrow area
-    if (state.mode === 1 && state.sweeper.readyToGoOn) {
+    if (state.mode === 5) {
+      enterCutFromGeoboard(state);
+    } else if (state.mode === 1 && state.sweeper.readyToGoOn) {
       enterSweepMode(state);
     } else if (state.mode === 2 && state.sweep.draggedUnits !== 0) {
       enterCutMode(state);
@@ -298,7 +327,9 @@ function testSwitchMode(
     }
   } else if (pt.x > tools.width - 2 * imwid && pt.x <= tools.width - imwid) {
     // Second-from-right slot
-    if (state.mode === 1
+    if (state.mode === 5) {
+      resetGeoboard(state);
+    } else if (state.mode === 1
         && state.sweeper.readyToGoOn
         && state.sweeper.s1end.y === state.sweeper.s2end.y) {
       // Tilt button → Cavalieri
@@ -330,8 +361,8 @@ function testSwitchMode(
       } else if (state.cut.subMode === 'custom' || state.cut.subMode === 'cutAll') {
         resetCut(state);
       } else {
-        // 'choose': go back to sweep
-        state.mode = 2;
+        // 'choose': go back to where we came from
+        state.mode = state.cut.cameFromGeoboard ? 5 : 2;
       }
     }
   } else {
@@ -390,6 +421,8 @@ export function redraw(canv: HTMLCanvasElement, tools: HTMLCanvasElement, state:
     drawCUT(canv, state);
   } else if (state.mode === 4) {
     drawCAVALIERI(canv, state);
+  } else if (state.mode === 5) {
+    drawGEO(canv, state);
   }
   drawTools(tools, state);
 }
