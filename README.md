@@ -1,6 +1,6 @@
 # Sweeping Area
 
-An interactive educational tool (Vanderbilt) that teaches area through geometric sweeping, dissection, and Cavalieri's principle. Originally written in Dart 1.x (~2019), now migrated to **TypeScript + Canvas API**.
+An interactive educational tool that teaches area through geometric sweeping, dissection, and Cavalieri's principle. Originally written in Dart 1.x (~2015-2019), now migrated to **TypeScript + Canvas API**.
 
 ## What it does
 
