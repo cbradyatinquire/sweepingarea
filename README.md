@@ -9,7 +9,7 @@ Students work through a sequence of activities:
 1. **Set up** — position and configure a sweeper (a line segment that defines one side of a parallelogram)
 2. **Sweep** — drag the sweeper to trace out a parallelogram and see its area
 3. **Cut & Rearrange** — dissect the shape and rearrange the pieces to form a rectangle
-4. **Cavalieri** — tilt the parallelogram and watch it "fall" into a rectangle, demonstrating Cavalieri's principle
+4. **Cavalieri** — set sweeper to horizontal.  Then, tilt the device (or simulate tilting) and watch the sweeper "fall" to trace out a shape that has constant cross-sectional dimension, and hence area equal to length * height, demonstrating Cavalieri's principle
 
 An alternative entry path uses a **Geoboard**: students draw a freehand polygon by dragging vertices on a peg grid, then proceed directly to Cut & Rearrange with their custom shape.
 
