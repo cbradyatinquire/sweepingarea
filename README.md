@@ -9,7 +9,7 @@ Students work through a sequence of activities:
 1. **Set up** — position and configure a sweeper (a line segment that defines one side of a parallelogram)
 2. **Sweep** — drag the sweeper to trace out a parallelogram and see its area
 3. **Cut & Rearrange** — dissect the shape and rearrange the pieces to form a rectangle
-4. **Cavalieri** — set sweeper to horizontal.  Then, tilt the device (or simulate tilting) and watch the sweeper "fall" to trace out a shape that has constant cross-sectional dimension, and hence area equal to length * height, demonstrating Cavalieri's principle
+4. **Cavalieri** — set the sweeper to horizontal, then tilt the device (or simulate tilting) and watch the sweeper "fall" to trace out a shape with constant cross-sectional width, demonstrating Cavalieri's principle
 
 An alternative entry path uses a **Geoboard**: students draw a freehand polygon by dragging vertices on a peg grid, then proceed directly to Cut & Rearrange with their custom shape.
 
@@ -23,12 +23,11 @@ An alternative entry path uses a **Geoboard**: students draw a freehand polygon 
 
 ```bash
 npm install
-npm run dev        # dev server at http://localhost:5175
-npm run build      # production build
-npm run test       # run unit tests
+npm run dev     # dev server at http://localhost:5175 — no build step needed
+npm run test    # run unit tests
 ```
 
-## App entry points
+## App entry points (dev server)
 
 | URL | Description |
 |-----|-------------|
@@ -36,12 +35,42 @@ npm run test       # run unit tests
 | `http://localhost:5175/?testShape=geoboard` | Start directly in Geoboard mode |
 | `http://localhost:5175/?testShape=arrow` | Start in Cut mode with a non-convex arrow shape (dev test) |
 | `http://localhost:5175/harness.html` | Gallery test harness (see below) |
+| `http://localhost:5175/author.html` | Authoring tool — save/load/copy JSON states |
+
+## Build commands
+
+```bash
+npm run build          # production build of all entry points → dist/
+npm run build:app      # single-file app build → dist-app-single/index.html (for gallery hosting)
+npm run build:offline  # single-file offline shell → dist/offline.html (runs build:app internally)
+npm run preview        # serve dist/ at http://localhost:4173
+```
+
+### Single-file app for gallery hosting
+
+`npm run build:app` produces `dist-app-single/index.html` — a fully self-contained HTML file with all JS, CSS, and images inlined as base64. No server configuration needed; the gallery can host or serve this single file directly.
+
+### Creating offline activities
+
+The **Create Offline Activity** button in the authoring tool requires a full build first:
+
+```bash
+npm run build && npm run build:offline
+npm run preview
+# then open http://localhost:4173/author.html
+```
+
+> **Footgun:** opening `http://localhost:5175/author.html` (dev server) after running the build will **silently produce a broken offline file**. The dev server ignores `dist/` and serves the un-baked template, so the app HTML is never embedded. Always use `http://localhost:4173/author.html` (preview server) for creating offline activities.
+
+All other authoring tool features (Save State, Load State, Copy JSON) work on either server.
 
 ---
 
 ## Gallery integration
 
 The app is designed to be embedded as an `<iframe>` and communicate with a parent shell via the **MessagePort** protocol. This enables gallery-style workflows where students can publish, browse, and remix each other's work.
+
+For gallery hosting, serve `dist-app-single/index.html` (from `npm run build:app`) — it is fully self-contained with no external dependencies.
 
 ### Protocol
 
@@ -67,7 +96,7 @@ The parent creates a `MessageChannel` and transfers one end (`port2`) to the ifr
 | Parent → App | `{ type: "requestState" }` |
 | App → Parent | `{ type: "state", state: <SerializedState>, thumbnail: "<dataURL>" }` |
 
-The thumbnail is a 200×200 JPEG `data:` URL captured from the main canvas at publish time.
+The thumbnail is a JPEG `data:` URL captured from the main canvas at publish time, 800px on the long side with the canvas aspect ratio preserved.
 
 ### State format
 
