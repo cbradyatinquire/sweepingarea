@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sweeping Area — Authoring Tool</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        font-family: Calibri, sans-serif;
+        background: #f0f0f0;
+      }
+
+      #toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        background: #2c2c2c;
+        color: #eee;
+        flex-shrink: 0;
+      }
+
+      #toolbar h1 {
+        font-size: 14px;
+        font-weight: bold;
+        letter-spacing: 0.05em;
+        margin-right: auto;
+        color: #ccc;
+      }
+
+      #toolbar button {
+        padding: 6px 16px;
+        font-size: 14px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      #save-btn {
+        background: #4a90d9;
+        color: #fff;
+      }
+      #save-btn:hover { background: #357abd; }
+      #save-btn:disabled { background: #555; color: #999; cursor: default; }
+
+      #load-btn {
+        background: #5a5;
+        color: #fff;
+      }
+      #load-btn:hover { background: #484; }
+      #load-btn:disabled { background: #555; color: #999; cursor: default; }
+
+      #copy-btn {
+        background: #888;
+        color: #fff;
+      }
+      #copy-btn:hover { background: #666; }
+      #copy-btn:disabled { background: #555; color: #999; cursor: default; }
+
+      #offline-btn { background: #e8a020; color: #fff; }
+      #offline-btn:hover { background: #c87010; }
+      #offline-btn:disabled { background: #555; color: #999; cursor: default; }
+
+      #status {
+        font-size: 12px;
+        color: #aaa;
+        min-width: 120px;
+        text-align: right;
+      }
+
+      #app-frame {
+        flex: 1;
+        border: none;
+        display: block;
+      }
+
+      /* Hidden file input */
+      #file-input { display: none; }
+    </style>
+  </head>
+  <body>
+    <div id="toolbar">
+      <h1>SWEEPING AREA — AUTHORING TOOL</h1>
+      <button id="load-btn" disabled>Load State…</button>
+      <button id="save-btn" disabled>Save State</button>
+      <button id="copy-btn" disabled>Copy JSON</button>
+      <button id="offline-btn" disabled>Create Offline Activity…</button>
+      <span id="status">Connecting…</span>
+    </div>
+
+    <iframe id="app-frame" src="/"></iframe>
+    <input type="file" id="file-input" accept=".json,application/json" />
+
+    <script type="module" src="/src/author.ts"></script>
+  </body>
+</html>

@@ -17,20 +17,27 @@ import { drawGEO, startDragGEO, mouseDragGEO, stopDragGEO,
 // Toolbar images (loaded once at startup)
 // ----------------------------------------------------------------
 
-const rightButton  = new Image();  rightButton.src  = 'images/rightImage.jpg';
-const leftButton   = new Image();  leftButton.src   = 'images/leftImage.jpg';
-const forkedButton   = new Image();  forkedButton.src   = 'images/forkedRightImage.jpg';
-const tiltButton     = new Image();  tiltButton.src     = 'images/cavalieri.png';
-const rotateUpBtn    = new Image();  rotateUpBtn.src    = 'images/rotateUp.png';
-const rotateDownBtn  = new Image();  rotateDownBtn.src  = 'images/rotateDown.png';
-const reflectUpBtn   = new Image();  reflectUpBtn.src   = 'images/reflectUp.png';
-const reflectDownBtn = new Image();  reflectDownBtn.src = 'images/reflectDown.png';
+import rightButtonSrc   from '../public/images/rightImage.jpg';
+import leftButtonSrc    from '../public/images/leftImage.jpg';
+import forkedButtonSrc  from '../public/images/forkedRightImage.jpg';
+import tiltButtonSrc    from '../public/images/cavalieri.png';
+import rotateUpSrc      from '../public/images/rotateUp.png';
+import rotateDownSrc    from '../public/images/rotateDown.png';
+import reflectUpSrc     from '../public/images/reflectUp.png';
+import reflectDownSrc   from '../public/images/reflectDown.png';
+const rightButton    = new Image();  rightButton.src    = rightButtonSrc;
+const leftButton     = new Image();  leftButton.src     = leftButtonSrc;
+const forkedButton   = new Image();  forkedButton.src   = forkedButtonSrc;
+const tiltButton     = new Image();  tiltButton.src     = tiltButtonSrc;
+const rotateUpBtn    = new Image();  rotateUpBtn.src    = rotateUpSrc;
+const rotateDownBtn  = new Image();  rotateDownBtn.src  = rotateDownSrc;
+const reflectUpBtn   = new Image();  reflectUpBtn.src   = reflectUpSrc;
+const reflectDownBtn = new Image();  reflectDownBtn.src = reflectDownSrc;
 
 // ----------------------------------------------------------------
 // Toolbar drawing
 // ----------------------------------------------------------------
 
-const resetButton = new Image();  resetButton.src = 'images/resetImage.png';
 
 const CAPTIONS = [
   'Click to start!',

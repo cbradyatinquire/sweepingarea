@@ -7,6 +7,8 @@ export default defineConfig({
       input: {
         main:    resolve(__dirname, 'index.html'),
         harness: resolve(__dirname, 'harness.html'),
+        author:  resolve(__dirname, 'author.html'),
+        offline: resolve(__dirname, 'offline.html'),
       },
     },
   },

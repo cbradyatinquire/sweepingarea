@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:offline": "tsc && vite build --config vite.config.app-single.ts && vite build --config vite.config.offline.ts",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -13,6 +14,7 @@
   "devDependencies": {
     "typescript": "~6.0.2",
     "vite": "^8.0.12",
+    "vite-plugin-singlefile": "^2.3.3",
     "vitest": "^4.1.8"
   }
 }

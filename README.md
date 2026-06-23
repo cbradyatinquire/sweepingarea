@@ -23,12 +23,11 @@ An alternative entry path uses a **Geoboard**: students draw a freehand polygon 
 
 ```bash
 npm install
-npm run dev        # dev server at http://localhost:5175
-npm run build      # production build
-npm run test       # run unit tests
+npm run dev     # dev server at http://localhost:5175 — no build step needed
+npm run test    # run unit tests
 ```
 
-## App entry points
+## App entry points (dev server)
 
 | URL | Description |
 |-----|-------------|
@@ -36,6 +35,22 @@ npm run test       # run unit tests
 | `http://localhost:5175/?testShape=geoboard` | Start directly in Geoboard mode |
 | `http://localhost:5175/?testShape=arrow` | Start in Cut mode with a non-convex arrow shape (dev test) |
 | `http://localhost:5175/harness.html` | Gallery test harness (see below) |
+| `http://localhost:5175/author.html` | Authoring tool — save/load/copy JSON states |
+
+## Creating offline activities
+
+The **Create Offline Activity** button in the authoring tool requires a separate build step. `npm run dev` alone is not sufficient — the dev server has no knowledge of the built offline template.
+
+```bash
+npm run build          # compile all entry points into dist/
+npm run build:offline  # bake the app into dist/offline.html (must run after build)
+npm run preview        # serve dist/ at http://localhost:4173
+# then open http://localhost:4173/author.html
+```
+
+> **Footgun:** if you open `http://localhost:5175/author.html` (dev server) after running the build steps, **Create Offline Activity will silently produce a broken file**. The dev server ignores `dist/` and serves the un-baked template, so `__APP_HTML__` stays `null`. Always use `http://localhost:4173/author.html` (preview server) for creating offline activities.
+
+All other authoring tool features (Save State, Load State, Copy JSON) work on either server.
 
 ---
 

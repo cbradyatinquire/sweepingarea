@@ -25,8 +25,11 @@ import {
 // Images
 // ----------------------------------------------------------------
 
-const scissorsImg       = new Image();  scissorsImg.src       = 'images/cutSelected.png';
-const scissorsClosedImg = new Image();  scissorsClosedImg.src = 'images/cutSelectedClosed.png';
+import scissorsSrc       from '../public/images/cutSelected.png';
+import scissorsClosedSrc from '../public/images/cutSelectedClosed.png';
+
+const scissorsImg       = new Image();  scissorsImg.src       = scissorsSrc;
+const scissorsClosedImg = new Image();  scissorsClosedImg.src = scissorsClosedSrc;
 
 const PIECE_COLOR = { r: 136, g: 136, b: 255, a: 0.5 };
 const ANIM_STEPS  = 30;
