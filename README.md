@@ -9,7 +9,7 @@ Students work through a sequence of activities:
 1. **Set up** — position and configure a sweeper (a line segment that defines one side of a parallelogram)
 2. **Sweep** — drag the sweeper to trace out a parallelogram and see its area
 3. **Cut & Rearrange** — dissect the shape and rearrange the pieces to form a rectangle
-4. **Cavalieri** — tilt the parallelogram and watch it "fall" into a rectangle, demonstrating Cavalieri's principle
+4. **Cavalieri** — set sweeper to horizontal.  Then, tilt the device (or simulate tilting) and watch the sweeper "fall" to trace out a shape that has constant cross-sectional dimension, and hence area equal to length * height, demonstrating Cavalieri's principle
 
 An alternative entry path uses a **Geoboard**: students draw a freehand polygon by dragging vertices on a peg grid, then proceed directly to Cut & Rearrange with their custom shape.
 
@@ -23,11 +23,12 @@ An alternative entry path uses a **Geoboard**: students draw a freehand polygon 
 
 ```bash
 npm install
-npm run dev     # dev server at http://localhost:5175 — no build step needed
-npm run test    # run unit tests
+npm run dev        # dev server at http://localhost:5175
+npm run build      # production build
+npm run test       # run unit tests
 ```
 
-## App entry points (dev server)
+## App entry points
 
 | URL | Description |
 |-----|-------------|
@@ -35,22 +36,6 @@ npm run test    # run unit tests
 | `http://localhost:5175/?testShape=geoboard` | Start directly in Geoboard mode |
 | `http://localhost:5175/?testShape=arrow` | Start in Cut mode with a non-convex arrow shape (dev test) |
 | `http://localhost:5175/harness.html` | Gallery test harness (see below) |
-| `http://localhost:5175/author.html` | Authoring tool — save/load/copy JSON states |
-
-## Creating offline activities
-
-The **Create Offline Activity** button in the authoring tool requires a separate build step. `npm run dev` alone is not sufficient — the dev server has no knowledge of the built offline template.
-
-```bash
-npm run build          # compile all entry points into dist/
-npm run build:offline  # bake the app into dist/offline.html (must run after build)
-npm run preview        # serve dist/ at http://localhost:4173
-# then open http://localhost:4173/author.html
-```
-
-> **Footgun:** if you open `http://localhost:5175/author.html` (dev server) after running the build steps, **Create Offline Activity will silently produce a broken file**. The dev server ignores `dist/` and serves the un-baked template, so `__APP_HTML__` stays `null`. Always use `http://localhost:4173/author.html` (preview server) for creating offline activities.
-
-All other authoring tool features (Save State, Load State, Copy JSON) work on either server.
 
 ---
 
