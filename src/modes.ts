@@ -17,14 +17,14 @@ import { drawGEO, startDragGEO, mouseDragGEO, stopDragGEO,
 // Toolbar images (loaded once at startup)
 // ----------------------------------------------------------------
 
-import rightButtonSrc   from '../public/images/rightImage.jpg';
-import leftButtonSrc    from '../public/images/leftImage.jpg';
-import forkedButtonSrc  from '../public/images/forkedRightImage.jpg';
-import tiltButtonSrc    from '../public/images/cavalieri.png';
-import rotateUpSrc      from '../public/images/rotateUp.png';
-import rotateDownSrc    from '../public/images/rotateDown.png';
-import reflectUpSrc     from '../public/images/reflectUp.png';
-import reflectDownSrc   from '../public/images/reflectDown.png';
+import rightButtonSrc   from './images/rightImage.jpg';
+import leftButtonSrc    from './images/leftImage.jpg';
+import forkedButtonSrc  from './images/forkedRightImage.jpg';
+import tiltButtonSrc    from './images/cavalieri.png';
+import rotateUpSrc      from './images/rotateUp.png';
+import rotateDownSrc    from './images/rotateDown.png';
+import reflectUpSrc     from './images/reflectUp.png';
+import reflectDownSrc   from './images/reflectDown.png';
 const rightButton    = new Image();  rightButton.src    = rightButtonSrc;
 const leftButton     = new Image();  leftButton.src     = leftButtonSrc;
 const forkedButton   = new Image();  forkedButton.src   = forkedButtonSrc;

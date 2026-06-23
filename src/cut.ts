@@ -25,8 +25,8 @@ import {
 // Images
 // ----------------------------------------------------------------
 
-import scissorsSrc       from '../public/images/cutSelected.png';
-import scissorsClosedSrc from '../public/images/cutSelectedClosed.png';
+import scissorsSrc       from './images/cutSelected.png';
+import scissorsClosedSrc from './images/cutSelectedClosed.png';
 
 const scissorsImg       = new Image();  scissorsImg.src       = scissorsSrc;
 const scissorsClosedImg = new Image();  scissorsClosedImg.src = scissorsClosedSrc;

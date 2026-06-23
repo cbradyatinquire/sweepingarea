@@ -190,14 +190,17 @@ export function deserializeState(
 // ----------------------------------------------------------------
 
 export function captureThumb(canv: HTMLCanvasElement): string {
-  // Downscale the main canvas to a 200×200 thumbnail
-  const size = 200;
+  // Capture at 800px on the long side, preserving the canvas aspect ratio.
+  const maxSize = 800;
+  const aspect = canv.width / canv.height;
+  const w = aspect >= 1 ? maxSize : Math.round(maxSize * aspect);
+  const h = aspect >= 1 ? Math.round(maxSize / aspect) : maxSize;
   const thumb = document.createElement('canvas');
-  thumb.width  = size;
-  thumb.height = size;
+  thumb.width  = w;
+  thumb.height = h;
   const ctx = thumb.getContext('2d')!;
   ctx.fillStyle = '#fff';
-  ctx.fillRect(0, 0, size, size);
-  ctx.drawImage(canv, 0, 0, size, size);
-  return thumb.toDataURL('image/jpeg', 0.7);
+  ctx.fillRect(0, 0, w, h);
+  ctx.drawImage(canv, 0, 0, w, h);
+  return thumb.toDataURL('image/jpeg', 0.85);
 }
